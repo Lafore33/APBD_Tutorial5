@@ -3,13 +3,7 @@ using Xunit.Abstractions;
 
 public class EmpDeptSalgradeTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public EmpDeptSalgradeTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
+    
     // 1. Simple WHERE filter
     // SQL: SELECT * FROM Emp WHERE Job = 'SALESMAN';
     [Fact]
@@ -96,9 +90,9 @@ public class EmpDeptSalgradeTests
     {
         var emps = Database.GetEmps();
 
+        // SelectMany is not very appropriate here, however here is the solution. Also, I provided second option with Select
         var result = emps.Where(emp => emp.Comm != null).SelectMany(emp => new[] {new {emp.EName, emp.Comm}}).ToList() ; 
-        
-        result.ForEach(r => _testOutputHelper.WriteLine(r.ToString()));
+        // var result = emps .Where(e => e.Comm != null).Select(e => new { e.EName, e.Comm }).ToList();
         Assert.All(result, r => Assert.NotNull(r.Comm));
     }
 
